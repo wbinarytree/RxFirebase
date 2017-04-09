@@ -4,7 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RxFirebase.iml" filepath="$PROJECT_DIR$/RxFirebase.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
+      <module fileurl="file://C:\Users\awang\AndroidStudioProjects\RxFirebase\lib\lib.iml" filepath="C:\Users\awang\AndroidStudioProjects\RxFirebase\lib\lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rxfirebase/rxfirebase.iml" filepath="$PROJECT_DIR$/rxfirebase/rxfirebase.iml" />
     </modules>
   </component>
 </project>
