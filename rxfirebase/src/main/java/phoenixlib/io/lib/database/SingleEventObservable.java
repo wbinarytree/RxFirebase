@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017 WBinaryTree
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package phoenixlib.io.lib.database;
 
 import com.google.firebase.database.DataSnapshot;
@@ -10,28 +26,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.internal.functions.ObjectHelper;
 
 /**
  * Created by yaoda on 06/04/17.
  */
 
-public class SingleEventObservable extends Single<DataSnapshot> {
+class SingleEventObservable extends Single<DataSnapshot> {
 
     private final Query query;
 
     SingleEventObservable(final Query query) {
+        ObjectHelper.requireNonNull(query, "Null query Received");
         this.query = query;
     }
 
 
     @Override
     protected void subscribeActual(SingleObserver<? super DataSnapshot> observer) {
+        ObjectHelper.requireNonNull(observer, "Null Observer Received");
         Listener listener = new Listener(observer, query);
-        query.addListenerForSingleValueEvent(listener);
         observer.onSubscribe(listener);
+        query.addListenerForSingleValueEvent(listener);
+
     }
 
-    static final class Listener implements Disposable, ValueEventListener {
+    private static final class Listener implements Disposable, ValueEventListener {
         private final SingleObserver<? super DataSnapshot> observer;
         private final Query query;
         private AtomicBoolean isDisposed = new AtomicBoolean(false);
