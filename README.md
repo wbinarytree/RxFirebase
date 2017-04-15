@@ -9,7 +9,6 @@ A wrap for Firebase Realtime Database
 usage
 -----
 
-
 #### Auth 
 
 ```
@@ -23,6 +22,9 @@ You can regisiter your listener and get your currentUser:
 RxAuth.authState(auth)
       .subscribe(user -> {/*Your current FirebaseUser*/});
 ```
+
+#### Database 
+
 
 ```
 RxDatabase.query(dbRef.limitToFirst(10))
