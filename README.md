@@ -17,7 +17,7 @@ Or you can use build in Mapper
 
 ```
 RxDatabase.query(dbRef.limitToFirst(10),YourClass.class)
-          .subscribe(yourClass -> {/**/});
+          .subscribe(yourClass -> {/*Your Subscriber*/});
                   
 ```
 
