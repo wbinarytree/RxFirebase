@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.Observable;
@@ -37,16 +38,24 @@ import io.reactivex.internal.functions.ObjectHelper;
 final class TaskObservable<T> extends Observable<T> {
 
 
-    private Task<T> task;
+    private final Callable<Task<T>> callable;
 
-    TaskObservable(Task<T> task) {
-        ObjectHelper.requireNonNull(task, "Null Task Received");
-        this.task = task;
+    TaskObservable(Callable<Task<T>> callable) {
+        ObjectHelper.requireNonNull(callable, "Null Callable Received");
+        this.callable = callable;
     }
 
     @Override
     protected void subscribeActual(Observer<? super T> observer) {
         ObjectHelper.requireNonNull(observer, "Null Observer Received");
+        Task<T> task;
+        try {
+            task = callable.call();
+            ObjectHelper.requireNonNull(task, "Null Task Received");
+        } catch (Exception e) {
+            observer.onError(e);
+            return;
+        }
         TaskListener<T> taskListener = new TaskListener<>(observer);
         observer.onSubscribe(taskListener);
         task.addOnFailureListener(taskListener);

@@ -16,10 +16,13 @@
 
 package phoenixlib.io.rxfirebase.auth;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 
@@ -29,20 +32,40 @@ import io.reactivex.Observable;
 
 public class RxAuth {
 
-    public static Observable<AuthResult> signInAnonymously(FirebaseAuth auth) {
-        return new TaskObservable<>(auth.signInAnonymously());
+    public static Observable<AuthResult> signInAnonymously(final FirebaseAuth auth) {
+        return new TaskObservable<>(new Callable<Task<AuthResult>>() {
+            @Override
+            public Task<AuthResult> call() throws Exception {
+                return auth.signInAnonymously();
+            }
+        });
     }
 
-    public static Observable<AuthResult> signInWithEmailAndPassword(FirebaseAuth auth, String email, String password) {
-        return new TaskObservable<>(auth.signInWithEmailAndPassword(email, password));
+    public static Observable<AuthResult> signInWithEmailAndPassword(final FirebaseAuth auth, final String email, final String password) {
+        return new TaskObservable<>(new Callable<Task<AuthResult>>() {
+            @Override
+            public Task<AuthResult> call() throws Exception {
+                return auth.signInWithEmailAndPassword(email, password);
+            }
+        });
     }
 
-    public static Observable<AuthResult> signInWithCredential(FirebaseAuth auth, AuthCredential credential) {
-        return new TaskObservable<>(auth.signInWithCredential(credential));
+    public static Observable<AuthResult> signInWithCredential(final FirebaseAuth auth, final AuthCredential credential) {
+        return new TaskObservable<>(new Callable<Task<AuthResult>>() {
+            @Override
+            public Task<AuthResult> call() throws Exception {
+                return auth.signInWithCredential(credential);
+            }
+        });
     }
 
-    public static Observable<AuthResult> signInWithCustomToken(FirebaseAuth auth, String token) {
-        return new TaskObservable<>(auth.signInWithCustomToken(token));
+    public static Observable<AuthResult> signInWithCustomToken(final FirebaseAuth auth, final String token) {
+        return new TaskObservable<>(new Callable<Task<AuthResult>>() {
+            @Override
+            public Task<AuthResult> call() throws Exception {
+                return auth.signInWithCustomToken(token);
+            }
+        });
     }
 
     public static Observable<FirebaseUser> authState(FirebaseAuth auth) {
