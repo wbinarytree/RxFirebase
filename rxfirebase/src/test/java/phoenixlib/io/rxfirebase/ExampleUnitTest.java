@@ -14,35 +14,20 @@
  * limitations under the License.
  */
 
-package phoenixlib.io.lib.database;
+package phoenixlib.io.rxfirebase;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * Created by yaoda on 06/04/17.
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-
-class ValueEvent<T> {
-    private final EventType type;
-    private final T value;
-    private final String key;
-
-    ValueEvent(EventType type, T value, String key) {
-        this.type = type;
-        this.value = value;
-        this.key = key;
+public class ExampleUnitTest {
+    @Test
+    public void addition_isCorrect() throws Exception {
+        assertEquals(4, 2 + 2);
     }
-
-    public EventType getType() {
-        return type;
-    }
-
-
-    public T getValue() {
-        return value;
-    }
-
-
-    public String getKey() {
-        return key;
-    }
-
 }

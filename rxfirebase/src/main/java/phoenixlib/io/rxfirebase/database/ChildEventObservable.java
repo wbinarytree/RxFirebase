@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package phoenixlib.io.lib.database;
+package phoenixlib.io.rxfirebase.database;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;

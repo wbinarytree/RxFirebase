@@ -14,12 +14,35 @@
  * limitations under the License.
  */
 
-package phoenixlib.io.lib.database;
+package phoenixlib.io.rxfirebase.database;
 
 /**
  * Created by yaoda on 06/04/17.
  */
 
-public enum EventType {
-    ADD, DELETE, UPDATE, MOVE;
+public class ValueEvent<T> {
+    private final EventType type;
+    private final T value;
+    private final String key;
+
+    ValueEvent(EventType type, T value, String key) {
+        this.type = type;
+        this.value = value;
+        this.key = key;
+    }
+
+    public EventType getType() {
+        return type;
+    }
+
+
+    public T getValue() {
+        return value;
+    }
+
+
+    public String getKey() {
+        return key;
+    }
+
 }

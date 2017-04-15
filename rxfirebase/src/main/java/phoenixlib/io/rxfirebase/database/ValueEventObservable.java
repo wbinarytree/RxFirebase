@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package phoenixlib.io.lib.database;
+package phoenixlib.io.rxfirebase.database;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,27 +23,26 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.functions.ObjectHelper;
 
 /**
- * Created by yaoda on 06/04/17.
+ * Created by yaoda on 21/03/17.
  */
 
-class SingleEventObservable extends Single<DataSnapshot> {
+class ValueEventObservable extends Observable<DataSnapshot> {
 
     private final Query query;
 
-    SingleEventObservable(final Query query) {
+    ValueEventObservable(final Query query) {
         ObjectHelper.requireNonNull(query, "Null query Received");
         this.query = query;
     }
 
-
     @Override
-    protected void subscribeActual(SingleObserver<? super DataSnapshot> observer) {
+    protected void subscribeActual(Observer<? super DataSnapshot> observer) {
         ObjectHelper.requireNonNull(observer, "Null Observer Received");
         Listener listener = new Listener(observer, query);
         observer.onSubscribe(listener);
@@ -51,12 +50,12 @@ class SingleEventObservable extends Single<DataSnapshot> {
 
     }
 
-    private static final class Listener implements Disposable, ValueEventListener {
-        private final SingleObserver<? super DataSnapshot> observer;
+    static final class Listener implements Disposable, ValueEventListener {
+        private final Observer<? super DataSnapshot> observer;
         private final Query query;
         private AtomicBoolean isDisposed = new AtomicBoolean(false);
 
-        Listener(SingleObserver<? super DataSnapshot> observer, Query query) {
+        Listener(Observer<? super DataSnapshot> observer, Query query) {
             this.observer = observer;
             this.query = query;
         }
@@ -77,7 +76,7 @@ class SingleEventObservable extends Single<DataSnapshot> {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             if (!isDisposed()) {
-                observer.onSuccess(dataSnapshot);
+                observer.onNext(dataSnapshot);
             }
         }
 

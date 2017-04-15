@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package phoenixlib.io.lib.database;
+package phoenixlib.io.rxfirebase.database;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.GenericTypeIndicator;
@@ -28,11 +28,6 @@ import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
-import static phoenixlib.io.lib.database.DataSnapshotMapper.generic;
-import static phoenixlib.io.lib.database.DataSnapshotMapper.list;
-import static phoenixlib.io.lib.database.DataSnapshotMapper.map;
-import static phoenixlib.io.lib.database.DataSnapshotMapper.value;
-
 /**
  * Created by yaoda on 21/03/17.
  */
@@ -43,19 +38,19 @@ public final class RxDatabase {
     }
 
     public static <T> Observable<T> query(Query query, Class<T> tClass) {
-        return new ValueEventObservable(query).map(value(tClass));
+        return new ValueEventObservable(query).map(DataSnapshotMapper.value(tClass));
     }
 
     public static <T> Observable<T> query(Query query, GenericTypeIndicator<T> indicator) {
-        return new ValueEventObservable(query).map(generic(indicator));
+        return new ValueEventObservable(query).map(DataSnapshotMapper.generic(indicator));
     }
 
     public static <T> Observable<List<T>> queryList(Query query, Class<T> tClass) {
-        return new ValueEventObservable(query).map(list(tClass));
+        return new ValueEventObservable(query).map(DataSnapshotMapper.list(tClass));
     }
 
     public static <T> Observable<Map<String, T>> queryMap(Query query, Class<T> tClass) {
-        return new ValueEventObservable(query).map(map(tClass));
+        return new ValueEventObservable(query).map(DataSnapshotMapper.map(tClass));
     }
 
     public static Single<DataSnapshot> queryOnce(Query query) {
@@ -63,19 +58,19 @@ public final class RxDatabase {
     }
 
     public static <T> Single<T> queryOnce(Query query, Class<T> tClass) {
-        return new SingleEventObservable(query).map(value(tClass));
+        return new SingleEventObservable(query).map(DataSnapshotMapper.value(tClass));
     }
 
     public static <T> Single<T> queryOnce(Query query, GenericTypeIndicator<T> indicator) {
-        return new SingleEventObservable(query).map(generic(indicator));
+        return new SingleEventObservable(query).map(DataSnapshotMapper.generic(indicator));
     }
 
     public static <T> Single<List<T>> queryOnceList(Query query, Class<T> tClass) {
-        return new SingleEventObservable(query).map(list(tClass));
+        return new SingleEventObservable(query).map(DataSnapshotMapper.list(tClass));
     }
 
     public static <T> Single<Map<String, T>> queryOnceMap(Query query, Class<T> tClass) {
-        return new SingleEventObservable(query).map(map(tClass));
+        return new SingleEventObservable(query).map(DataSnapshotMapper.map(tClass));
     }
 
     public static Observable<ValueEvent<DataSnapshot>> childEvent(Query query) {
@@ -86,7 +81,7 @@ public final class RxDatabase {
         return new ChildEventObservable(query).map(new Function<ValueEvent<DataSnapshot>, ValueEvent<T>>() {
             @Override
             public ValueEvent<T> apply(@NonNull ValueEvent<DataSnapshot> event) throws Exception {
-                return new ValueEvent<>(event.getType(), value(tClass).apply(event.getValue()), event
+                return new ValueEvent<>(event.getType(), DataSnapshotMapper.value(tClass).apply(event.getValue()), event
                         .getKey());
             }
         });
