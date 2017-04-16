@@ -20,6 +20,8 @@ import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -32,7 +34,7 @@ import io.reactivex.internal.functions.ObjectHelper;
  * Created by phoenix on 2017/4/15.
  */
 
-class AuthStateObservable extends Observable<FirebaseUser> {
+public class AuthStateObservable extends Observable<FirebaseUser> {
 
     private final FirebaseAuth auth;
 
@@ -48,6 +50,7 @@ class AuthStateObservable extends Observable<FirebaseUser> {
         observer.onSubscribe(listener);
         auth.addAuthStateListener(listener);
     }
+
 
     private static class AuthListener implements Disposable, FirebaseAuth.AuthStateListener {
 

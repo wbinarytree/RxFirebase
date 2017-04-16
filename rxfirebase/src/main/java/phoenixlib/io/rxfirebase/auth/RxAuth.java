@@ -72,4 +72,13 @@ public class RxAuth {
         return new AuthStateObservable(auth);
     }
 
+    public static Observable<AuthResult> createUser(final FirebaseAuth auth, final String email, final String password) {
+        return new TaskObservable<>(new Callable<Task<AuthResult>>() {
+            @Override
+            public Task<AuthResult> call() throws Exception {
+                return auth.createUserWithEmailAndPassword(email, password);
+            }
+        });
+    }
+
 }
