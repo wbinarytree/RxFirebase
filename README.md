@@ -47,14 +47,14 @@ download
 <dependency>
   <groupId>com.github.wbinarytree</groupId>
   <artifactId>rxfirebase</artifactId>
-  <version>0.3.1</version>
+  <version>0.3.2</version>
   <type>pom</type>
 </dependency>
 ```
 
   Gradle:
 ```
-compile 'com.github.wbinarytree:rxfirebase:0.3.1'
+compile 'com.github.wbinarytree:rxfirebase:0.3.2'
 ```
 
 License
