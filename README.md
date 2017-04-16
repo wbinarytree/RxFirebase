@@ -5,6 +5,7 @@ RxFirebase
 
 
 A wrap for Google's Firebase.
+
 usage
 -----
 
