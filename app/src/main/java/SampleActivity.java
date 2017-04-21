@@ -18,8 +18,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import phoenixlib.io.rxfirebase.auth.RxAuth;
-
 /**
  * Created by phoenix on 2017/4/15.
  */

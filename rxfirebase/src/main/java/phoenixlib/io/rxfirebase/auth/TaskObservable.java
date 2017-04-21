@@ -48,19 +48,20 @@ final class TaskObservable<T> extends Observable<T> {
     @Override
     protected void subscribeActual(Observer<? super T> observer) {
         ObjectHelper.requireNonNull(observer, "Null Observer Received");
-        Task<T> task;
-        try {
-            task = callable.call();
-            ObjectHelper.requireNonNull(task, "Null Task Received");
-        } catch (Exception e) {
-            observer.onError(e);
-            return;
-        }
         TaskListener<T> taskListener = new TaskListener<>(observer);
         observer.onSubscribe(taskListener);
-        task.addOnFailureListener(taskListener);
-        task.addOnSuccessListener(taskListener);
-        task.addOnCompleteListener(taskListener);
+        Task<T> task;
+        try {
+            task = callable.call()
+                           .addOnFailureListener(taskListener)
+                           .addOnSuccessListener(taskListener)
+                           .addOnCompleteListener(taskListener);
+            ObjectHelper.requireNonNull(task, "Null Task Received");
+        } catch (Exception e) {
+            if (!taskListener.isDisposed()) {
+                observer.onError(e);
+            }
+        }
     }
 
     private static class TaskListener<T> implements OnCompleteListener<T>, Disposable, OnFailureListener, OnSuccessListener<T> {
