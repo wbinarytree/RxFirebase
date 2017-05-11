@@ -4,7 +4,7 @@ RxFirebase
 [![Maven Central](https://img.shields.io/badge/jcenter-v0.3.3-green.svg)](https://bintray.com/phoenixwyd/maven/RxFirebase)
 
 
-A wrap for Google's Firebase. 
+A [RxJava 2.x ](https://github.com/ReactiveX/RxJava) wrap for Google's Firebase. 
 
 usage
 -----
