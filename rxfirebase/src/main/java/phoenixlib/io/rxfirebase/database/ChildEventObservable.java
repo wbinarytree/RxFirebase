@@ -20,14 +20,12 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.functions.ObjectHelper;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by yaoda on 06/04/17.
@@ -37,7 +35,7 @@ class ChildEventObservable extends Observable<ValueEvent<DataSnapshot>> {
 
     private final Query query;
 
-    ChildEventObservable(@NonNull final Query query) {
+    ChildEventObservable(@NonNull Query query) {
         ObjectHelper.requireNonNull(query, "Null query Received");
         this.query = query;
     }
@@ -48,7 +46,6 @@ class ChildEventObservable extends Observable<ValueEvent<DataSnapshot>> {
         Listener listener = new Listener(observer, query);
         observer.onSubscribe(listener);
         query.addChildEventListener(listener);
-
     }
 
     private static final class Listener implements Disposable, ChildEventListener {
@@ -61,53 +58,44 @@ class ChildEventObservable extends Observable<ValueEvent<DataSnapshot>> {
             this.query = query;
         }
 
-
-        @Override
-        public void dispose() {
+        @Override public void dispose() {
             isDisposed.compareAndSet(false, true);
             query.removeEventListener(this);
         }
 
-        @Override
-        public boolean isDisposed() {
+        @Override public boolean isDisposed() {
             return isDisposed.get();
         }
 
-        @Override
-        public void onChildAdded(DataSnapshot ds, String s) {
+        @Override public void onChildAdded(DataSnapshot ds, String s) {
             if (!isDisposed()) {
-                  ValueEvent<DataSnapshot> t = new ValueEvent<>(EventType.ADD, ds, ds.getKey());
+                ValueEvent<DataSnapshot> t = new ValueEvent<>(EventType.ADD, ds, ds.getKey());
                 observer.onNext(t);
             }
         }
 
-        @Override
-        public void onChildChanged(DataSnapshot ds, String s) {
+        @Override public void onChildChanged(DataSnapshot ds, String s) {
             if (!isDisposed()) {
                 ValueEvent<DataSnapshot> t = new ValueEvent<>(EventType.UPDATE, ds, ds.getKey());
                 observer.onNext(t);
             }
         }
 
-        @Override
-        public void onChildRemoved(DataSnapshot ds) {
+        @Override public void onChildRemoved(DataSnapshot ds) {
             if (!isDisposed()) {
                 ValueEvent<DataSnapshot> t = new ValueEvent<>(EventType.DELETE, ds, ds.getKey());
                 observer.onNext(t);
             }
-
         }
 
-        @Override
-        public void onChildMoved(DataSnapshot ds, String s) {
+        @Override public void onChildMoved(DataSnapshot ds, String s) {
             if (!isDisposed()) {
                 ValueEvent<DataSnapshot> t = new ValueEvent<>(EventType.MOVE, ds, ds.getKey());
                 observer.onNext(t);
             }
         }
 
-        @Override
-        public void onCancelled(DatabaseError error) {
+        @Override public void onCancelled(DatabaseError error) {
             if (isDisposed()) {
                 observer.onError(error.toException());
             }

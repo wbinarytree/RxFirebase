@@ -18,21 +18,14 @@ package phoenixlib.io.rxfirebase;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import phoenixlib.io.rxfirebase.auth.RxAuth;
-import phoenixlib.io.rxfirebase.auth.RxUser;
+import phoenixlib.io.rxfirebase.database.RxDatabase;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -41,52 +34,19 @@ public class MainActivity extends AppCompatActivity {
     EditText etPwd;
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RxAuth.createUser(auth, "11wangyaoda@gmail.com", "123456789")
-                      .flatMap(new Function<AuthResult, ObservableSource<AuthResult>>() {
-                          @Override
-                          public ObservableSource<AuthResult> apply(@NonNull AuthResult authResult) throws Exception {
-                              return RxUser.updateUsername(authResult.getUser(), "W_BinaryTree")
-                                           .andThen(Observable.just(authResult));
-                          }
-                      })
-                      .map(new Function<AuthResult, String>() {
-                          @Override
-                          public String apply(@NonNull AuthResult authResult) throws Exception {
-                              return authResult.getUser().getUid() + " \n username:"+authResult.getUser()
-                                                                               .getDisplayName();
-                          }
-                      })
-
-                      .startWith("Starting")
-                      .onErrorReturn(new Function<Throwable, String>() {
-                          @Override
-                          public String apply(@NonNull Throwable throwable) throws Exception {
-                              return throwable.getMessage();
-                          }
-                      })
-                      .subscribe(new Consumer<String>() {
-                          @Override
-                          public void accept(@NonNull String s) throws Exception {
-                              Log.d(TAG, "accept: " + s);
-                          }
-                      }, new Consumer<Throwable>() {
-                          @Override
-                          public void accept(@NonNull Throwable throwable) throws Exception {
-                              Log.d(TAG, "accept: " + throwable.getMessage());
-                          }
-                      }, new Action() {
-                          @Override
-                          public void run() throws Exception {
-                              Log.d(TAG, "Success");
-                          }
-                      });
+            @Override public void onClick(View v) {
+                RxDatabase.query(FirebaseDatabase.getInstance().getReference().child("user"))
+                    .subscribe(new Consumer<DataSnapshot>() {
+                        @Override public void accept(@NonNull DataSnapshot dataSnapshot)
+                            throws Exception {
+                            String key = dataSnapshot.getKey();
+                        }
+                    });
+                //RxDatabase.query()
             }
         });
     }

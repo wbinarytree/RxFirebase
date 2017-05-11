@@ -20,11 +20,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
-
-import java.util.concurrent.Callable;
-
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import java.util.concurrent.Callable;
 
 /**
  * Created by phoenix on 2017/4/16.
@@ -32,31 +30,32 @@ import io.reactivex.Observable;
 
 public class RxUser {
     public static Completable updateUsername(final FirebaseUser user, final String username) {
-        return new TaskObservable<>(new Callable<Task<Void>>() {
-            @Override
-            public Task<Void> call() throws Exception {
-                return user.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username)
-                                                                                .build());
+        Callable<Task<Void>> c = new Callable<Task<Void>>() {
+            @Override public Task<Void> call() throws Exception {
+                return user.updateProfile(
+                    new UserProfileChangeRequest.Builder().setDisplayName(username).build());
             }
-        }).ignoreElements();
+        };
+        return new TaskCompletable(c);
     }
 
-    public static Completable updateProfile(final FirebaseUser user, final UserProfileChangeRequest profile) {
-        return new TaskObservable<>(new Callable<Task<Void>>() {
-            @Override
-            public Task<Void> call() throws Exception {
+    public static Completable updateProfile(final FirebaseUser user,
+        final UserProfileChangeRequest profile) {
+        Callable<Task<Void>> c = new Callable<Task<Void>>() {
+            @Override public Task<Void> call() throws Exception {
                 return user.updateProfile(profile);
             }
-        }).ignoreElements();
+        };
+        return new TaskCompletable(c);
     }
 
-    public static Observable<GetTokenResult> getToken(final FirebaseUser user, final boolean refresh) {
-        return new TaskObservable<>(new Callable<Task<GetTokenResult>>() {
-            @Override
-            public Task<GetTokenResult> call() throws Exception {
+    public static Observable<GetTokenResult> getToken(final FirebaseUser user,
+        final boolean refresh) {
+        Callable<Task<GetTokenResult>> c = new Callable<Task<GetTokenResult>>() {
+            @Override public Task<GetTokenResult> call() throws Exception {
                 return user.getToken(refresh);
             }
-        });
+        };
+        return new TaskObservable<>(c);
     }
-
 }

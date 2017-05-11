@@ -19,14 +19,12 @@ package phoenixlib.io.rxfirebase.database;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
-
-import java.util.List;
-import java.util.Map;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yaoda on 21/03/17.
@@ -78,13 +76,13 @@ public final class RxDatabase {
     }
 
     public static <T> Observable<ValueEvent<T>> childEvent(Query query, final Class<T> tClass) {
-        return new ChildEventObservable(query).map(new Function<ValueEvent<DataSnapshot>, ValueEvent<T>>() {
-            @Override
-            public ValueEvent<T> apply(@NonNull ValueEvent<DataSnapshot> event) throws Exception {
-                return new ValueEvent<>(event.getType(), DataSnapshotMapper.value(tClass).apply(event.getValue()), event
-                        .getKey());
-            }
-        });
+        return new ChildEventObservable(query).map(
+            new Function<ValueEvent<DataSnapshot>, ValueEvent<T>>() {
+                @Override public ValueEvent<T> apply(@NonNull ValueEvent<DataSnapshot> event)
+                    throws Exception {
+                    return new ValueEvent<>(event.getType(),
+                        DataSnapshotMapper.value(tClass).apply(event.getValue()), event.getKey());
+                }
+            });
     }
-
 }

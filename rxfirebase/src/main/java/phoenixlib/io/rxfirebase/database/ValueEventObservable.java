@@ -20,13 +20,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.functions.ObjectHelper;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by yaoda on 21/03/17.
@@ -41,47 +39,39 @@ class ValueEventObservable extends Observable<DataSnapshot> {
         this.query = query;
     }
 
-    @Override
-    protected void subscribeActual(Observer<? super DataSnapshot> observer) {
+    @Override protected void subscribeActual(Observer<? super DataSnapshot> observer) {
         ObjectHelper.requireNonNull(observer, "Null Observer Received");
         Listener listener = new Listener(observer, query);
         observer.onSubscribe(listener);
         query.addListenerForSingleValueEvent(listener);
-
     }
 
     static final class Listener implements Disposable, ValueEventListener {
         private final Observer<? super DataSnapshot> observer;
         private final Query query;
-        private AtomicBoolean isDisposed = new AtomicBoolean(false);
+        private final AtomicBoolean isDisposed = new AtomicBoolean(false);
 
         Listener(Observer<? super DataSnapshot> observer, Query query) {
             this.observer = observer;
             this.query = query;
         }
 
-
-        @Override
-        public void dispose() {
+        @Override public void dispose() {
             isDisposed.compareAndSet(false, true);
             query.removeEventListener(this);
         }
 
-        @Override
-        public boolean isDisposed() {
+        @Override public boolean isDisposed() {
             return isDisposed.get();
         }
 
-
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
+        @Override public void onDataChange(DataSnapshot dataSnapshot) {
             if (!isDisposed()) {
                 observer.onNext(dataSnapshot);
             }
         }
 
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
+        @Override public void onCancelled(DatabaseError databaseError) {
             if (!isDisposed()) {
                 observer.onError(databaseError.toException());
             }

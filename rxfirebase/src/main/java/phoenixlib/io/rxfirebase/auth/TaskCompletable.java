@@ -18,39 +18,34 @@ package phoenixlib.io.rxfirebase.auth;
 
 import android.support.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.exceptions.CompositeException;
 import io.reactivex.internal.functions.ObjectHelper;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by phoenix on 2017/4/15.
+ * Created by yaoda on 11/05/17.
  */
 
-final class TaskObservable<T> extends Observable<T> {
+class TaskCompletable extends Completable {
+    private final Callable<Task<Void>> callable;
 
-    private final Callable<Task<T>> callable;
-
-    TaskObservable(Callable<Task<T>> callable) {
+    TaskCompletable(Callable<Task<Void>> callable) {
         ObjectHelper.requireNonNull(callable, "Null Callable Received");
         this.callable = callable;
     }
 
-    @Override protected void subscribeActual(Observer<? super T> observer) {
+    @Override protected void subscribeActual(CompletableObserver observer) {
         ObjectHelper.requireNonNull(observer, "Null Observer Received");
-        TaskListener<T> taskListener = new TaskListener<>(observer);
+        TaskListener taskListener = new TaskListener(observer);
         observer.onSubscribe(taskListener);
-        Task<T> task;
+        Task task;
         try {
-            task = callable.call()
-                .addOnFailureListener(taskListener)
-                .addOnSuccessListener(taskListener)
-                .addOnCompleteListener(taskListener);
+            task = callable.call().addOnCompleteListener(taskListener);
             ObjectHelper.requireNonNull(task, "Null Task Received");
         } catch (Exception e) {
             if (!taskListener.isDisposed()) {
@@ -59,13 +54,13 @@ final class TaskObservable<T> extends Observable<T> {
         }
     }
 
-    private static class TaskListener<T>
-        implements OnCompleteListener<T>, Disposable, OnFailureListener, OnSuccessListener<T> {
+    private static class TaskListener implements OnCompleteListener<Void>, Disposable {
 
-        private final Observer<? super T> observer;
+        private final CompletableObserver observer;
+
         private final AtomicBoolean isDispose = new AtomicBoolean(false);
 
-        TaskListener(Observer<? super T> observer) {
+        TaskListener(CompletableObserver observer) {
             this.observer = observer;
         }
 
@@ -77,21 +72,17 @@ final class TaskObservable<T> extends Observable<T> {
             return isDispose.get();
         }
 
-        @Override public void onComplete(@NonNull Task<T> task) {
+        @Override public void onComplete(@NonNull Task task) {
             if (!isDisposed()) {
-                observer.onComplete();
-            }
-        }
-
-        @Override public void onFailure(@NonNull Exception e) {
-            if (!isDisposed()) {
-                observer.onError(e);
-            }
-        }
-
-        @Override public void onSuccess(T o) {
-            if (!isDisposed()) {
-                observer.onNext(o);
+                if (task.isSuccessful()) {
+                    observer.onComplete();
+                } else {
+                    try {
+                        observer.onError(task.getException());
+                    } catch (Exception e) {
+                        observer.onError(new CompositeException(e));
+                    }
+                }
             }
         }
     }

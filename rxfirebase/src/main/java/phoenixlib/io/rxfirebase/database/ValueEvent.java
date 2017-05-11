@@ -35,14 +35,11 @@ public class ValueEvent<T> {
         return type;
     }
 
-
     public T getValue() {
         return value;
     }
 
-
     public String getKey() {
         return key;
     }
-
 }

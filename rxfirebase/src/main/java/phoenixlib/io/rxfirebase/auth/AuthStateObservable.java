@@ -17,24 +17,19 @@
 package phoenixlib.io.rxfirebase.auth;
 
 import android.support.annotation.NonNull;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-import com.google.firebase.auth.UserProfileChangeRequest;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.functions.ObjectHelper;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by phoenix on 2017/4/15.
  */
 
-public class AuthStateObservable extends Observable<FirebaseUser> {
+class AuthStateObservable extends Observable<FirebaseUser> {
 
     private final FirebaseAuth auth;
 
@@ -43,14 +38,12 @@ public class AuthStateObservable extends Observable<FirebaseUser> {
         this.auth = auth;
     }
 
-    @Override
-    protected void subscribeActual(Observer<? super FirebaseUser> observer) {
+    @Override protected void subscribeActual(Observer<? super FirebaseUser> observer) {
         ObjectHelper.requireNonNull(observer, "Null Observer Received");
         AuthListener listener = new AuthListener(observer, auth);
         observer.onSubscribe(listener);
         auth.addAuthStateListener(listener);
     }
-
 
     private static class AuthListener implements Disposable, FirebaseAuth.AuthStateListener {
 
@@ -64,24 +57,23 @@ public class AuthStateObservable extends Observable<FirebaseUser> {
             this.auth = auth;
         }
 
-
-        @Override
-        public void dispose() {
-            isDispose.compareAndSet(false,true);
+        @Override public void dispose() {
+            isDispose.compareAndSet(false, true);
             auth.removeAuthStateListener(this);
         }
 
-        @Override
-        public boolean isDisposed() {
+        @Override public boolean isDisposed() {
             return isDispose.get();
         }
 
-        @Override
-        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        @Override public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
             if (isDisposed()) {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 if (currentUser != null) {
                     observer.onNext(currentUser);
+                } else {
+                    observer.onComplete();
+                    dispose();
                 }
             }
         }

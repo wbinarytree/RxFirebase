@@ -18,16 +18,13 @@ package phoenixlib.io.rxfirebase.database;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.GenericTypeIndicator;
-
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
+import io.reactivex.internal.functions.ObjectHelper;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-
 
 /**
  * Created by phoenix on 2017/4/14.
@@ -61,7 +58,8 @@ final class DataSnapshotMapper {
         return items;
     }
 
-    private static <T> T parserGeneric(GenericTypeIndicator<T> genericTypeIndicator, DataSnapshot dataSnapshot) {
+    private static <T> T parserGeneric(GenericTypeIndicator<T> genericTypeIndicator,
+        DataSnapshot dataSnapshot) {
         if (dataSnapshot.exists()) {
             T value = dataSnapshot.getValue(genericTypeIndicator);
             ObjectHelper.requireNonNull(value, "Null Value From DataSnapShot");
@@ -71,42 +69,38 @@ final class DataSnapshotMapper {
         }
     }
 
-
     static <T> Function<DataSnapshot, T> value(final Class<T> tClass) {
-        ObjectHelper.requireNonNull(tClass,"Null Type Receive");
+        ObjectHelper.requireNonNull(tClass, "Null Type Receive");
         return new Function<DataSnapshot, T>() {
-            @Override
-            public T apply(@NonNull DataSnapshot dataSnapshot) throws Exception {
+            @Override public T apply(@NonNull DataSnapshot dataSnapshot) throws Exception {
                 return DataSnapshotMapper.parser(tClass, dataSnapshot);
             }
         };
     }
 
     static <T> Function<DataSnapshot, List<T>> list(final Class<T> tClass) {
-        ObjectHelper.requireNonNull(tClass,"Null Type Receive");
+        ObjectHelper.requireNonNull(tClass, "Null Type Receive");
         return new Function<DataSnapshot, List<T>>() {
-            @Override
-            public List<T> apply(@NonNull DataSnapshot dataSnapshot) throws Exception {
+            @Override public List<T> apply(@NonNull DataSnapshot dataSnapshot) throws Exception {
                 return DataSnapshotMapper.parserList(tClass, dataSnapshot);
             }
         };
     }
 
     static <T> Function<DataSnapshot, Map<String, T>> map(final Class<T> tClass) {
-        ObjectHelper.requireNonNull(tClass,"Null Type Receive");
+        ObjectHelper.requireNonNull(tClass, "Null Type Receive");
         return new Function<DataSnapshot, Map<String, T>>() {
-            @Override
-            public Map<String, T> apply(@NonNull DataSnapshot dataSnapshot) throws Exception {
+            @Override public Map<String, T> apply(@NonNull DataSnapshot dataSnapshot)
+                throws Exception {
                 return DataSnapshotMapper.parserMap(tClass, dataSnapshot);
             }
         };
     }
 
     static <T> Function<DataSnapshot, T> generic(final GenericTypeIndicator<T> indicator) {
-        ObjectHelper.requireNonNull(indicator,"Null Type Receive");
+        ObjectHelper.requireNonNull(indicator, "Null Type Receive");
         return new Function<DataSnapshot, T>() {
-            @Override
-            public T apply(@NonNull DataSnapshot dataSnapshot) throws Exception {
+            @Override public T apply(@NonNull DataSnapshot dataSnapshot) throws Exception {
                 return parserGeneric(indicator, dataSnapshot);
             }
         };
