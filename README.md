@@ -4,7 +4,7 @@ RxFirebase
 [![Maven Central](https://img.shields.io/badge/jcenter-v0.3.3-green.svg)](https://bintray.com/phoenixwyd/maven/RxFirebase)
 
 
-A wrap for Google's Firebase.
+A wrap for Google's Firebase. 
 
 usage
 -----
@@ -38,6 +38,8 @@ RxDatabase.query(dbRef.limitToFirst(10),YourClass.class)
           .subscribe(yourClass -> {/*Your data of YourClass*/});
                   
 ```
+
+More usage see [Javadoc](https://wbinarytree.github.io/RxFirebase/javadoc/index)
 
 download
 --------
