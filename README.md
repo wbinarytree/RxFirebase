@@ -1,7 +1,7 @@
 RxFirebase
 ==========
 
-[![Maven Central](https://img.shields.io/badge/jcenter-v0.3.1-green.svg)](https://bintray.com/phoenixwyd/maven/RxFirebase)
+[![Maven Central](https://img.shields.io/badge/jcenter-v0.3.3-green.svg)](https://bintray.com/phoenixwyd/maven/RxFirebase)
 
 
 A wrap for Google's Firebase.
@@ -42,19 +42,27 @@ RxDatabase.query(dbRef.limitToFirst(10),YourClass.class)
 download
 --------
 
+add jcenter in your build.gradle :
+
+```
+    repositories {
+        jcenter()
+    }
+```
+
   Maven :
 ```
 <dependency>
   <groupId>com.github.wbinarytree</groupId>
   <artifactId>rxfirebase</artifactId>
-  <version>0.3.2</version>
+  <version>0.3.3</version>
   <type>pom</type>
 </dependency>
 ```
 
   Gradle:
 ```
-compile 'com.github.wbinarytree:rxfirebase:0.3.2'
+compile 'com.github.wbinarytree:rxfirebase:0.3.3'
 ```
 
 License
