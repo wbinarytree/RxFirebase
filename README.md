@@ -39,7 +39,7 @@ RxDatabase.query(dbRef.limitToFirst(10),YourClass.class)
                   
 ```
 
-More usage see [Javadoc](https://wbinarytree.github.io/RxFirebase/javadoc/index)
+More usage see [Javadoc](https://wbinarytree.github.io/RxFirebase/docs/javadoc/index)
 
 download
 --------
