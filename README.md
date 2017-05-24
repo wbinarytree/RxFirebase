@@ -1,7 +1,7 @@
 RxFirebase
 ==========
 
-[![Maven Central](https://img.shields.io/badge/jcenter-v0.3.3-green.svg)](https://bintray.com/phoenixwyd/maven/RxFirebase)
+ [ ![Download](https://api.bintray.com/packages/phoenixwyd/maven/RxFirebase/images/download.svg) ](https://bintray.com/phoenixwyd/maven/RxFirebase/_latestVersion)
 
 
 A [RxJava 2.x ](https://github.com/ReactiveX/RxJava) wrap for Google's Firebase. 
