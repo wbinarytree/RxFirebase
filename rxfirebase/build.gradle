@@ -17,14 +17,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-version = '0.3.3'
+version = '0.4.0'
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
@@ -45,9 +44,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    compile 'com.google.firebase:firebase-database:10.2.1'
-    compile 'com.google.firebase:firebase-auth:10.2.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.6'
+    implementation "com.google.firebase:firebase-database:$playservice_version"
+    implementation "com.google.firebase:firebase-auth:$playservice_version"
+    implementation "io.reactivex.rxjava2:rxjava:2.1.6"
 }
 
 def siteUrl = 'https://github.com/wbinarytree/RxFirebase'
@@ -108,7 +107,7 @@ install {
 }
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray  {
+bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
     configurations = ['archives']
